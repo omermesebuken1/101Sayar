@@ -21,6 +21,7 @@ public class Set
     public string Color2 { get; set; }
     public string Color3 { get; set; }
     public string Color4 { get; set; }
+    public int OkeyUsed { get; set; }
 }
 
 
@@ -36,6 +37,10 @@ public class MainClass
     public List<Piece> greenPieces = new List<Piece>();
     public List<Piece> denemeList = new List<Piece>();
     public List<Piece> okeyList = new List<Piece>();
+    public List<Piece> tmpRedList = new List<Piece>();
+    public List<Piece> tmpBlueList = new List<Piece>();
+    public List<Piece> tmpYellowList = new List<Piece>();
+    public List<Piece> tmpGreenList = new List<Piece>();
 
     List<Set> SetList = new List<Set>();
 
@@ -536,7 +541,11 @@ public class MainClass
         {
             if (rangePack.Item1 != 0 && rangePack.Item2 != 0)
             {
-                Console.WriteLine($"[{rangePack.Item1} ,{rangePack.Item2} ,{rangePack.Item3}]");
+                
+                Console.WriteLine($"[ {rangePack.Item1} - {rangePack.Item2} ]\t\tOkey Used:{rangePack.Item3}");
+
+
+
             }
 
         }
@@ -544,8 +553,6 @@ public class MainClass
 
     public void FindRuns()
     {
-
-        FindOkeyCount();
 
         Console.WriteLine("");
         Console.WriteLine("");
@@ -587,8 +594,6 @@ public class MainClass
         rangePacks.Clear();
         Console.WriteLine("");
 
-        okeyList.Clear();
-
     }
 
     public void FindOkeyCount()
@@ -611,7 +616,7 @@ public class MainClass
             }
         }
 
-        //manuel add okey
+        //manuel add 2 okey
 
         //for (int i = 0; i < 2; i++)
         //{
@@ -657,7 +662,6 @@ public class MainClass
 
         return rangePacks;
     }
-
 
     public List<(int?, int?, int?)> RangePacksTwoOkey(List<Piece> piecesOfColor)
     {
@@ -783,7 +787,6 @@ public class MainClass
 
     }
 
-
     public List<(int?, int?, int?)> RangePacksOneOkey(List<Piece> piecesOfColor)
     {
 
@@ -896,7 +899,6 @@ public class MainClass
 
     }
 
-
     public List<(int?, int?, int?)> RangePacksWithoutOkey(List<Piece> piecesOfColor)
     {
 
@@ -990,89 +992,2197 @@ public class MainClass
 
     }
 
-
-
-    public void FindSets()
+    public void FindSetsWithoutOkey()
     {
+
         Set tmpSet;
+
+
+        foreach (var item in redPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpRedList.Add(item);
+            }
+
+        }
+
+        foreach (var item in bluePieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpBlueList.Add(item);
+            }
+
+        }
+
+        foreach (var item in yellowPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpYellowList.Add(item);
+            }
+
+        }
+
+        foreach (var item in greenPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpGreenList.Add(item);
+            }
+
+        }
+
 
         for (int i = 1; i <= 13; i++)
         {
-            tmpSet = new Set();
 
-            tmpSet.Number = i;
-            tmpSet.Color1 = null;
-            tmpSet.Color2 = null;
-            tmpSet.Color3 = null;
-            tmpSet.Color4 = null;
+                tmpSet = new Set();
 
-            foreach (var item in redPieces)
+                tmpSet.Number = i;
+                tmpSet.Color1 = null;
+                tmpSet.Color2 = null;
+                tmpSet.Color3 = null;
+                tmpSet.Color4 = null;
+                tmpSet.OkeyUsed = 0;
+
+                #region // set the color if exist
+
+                    foreach (var item in tmpRedList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color1 = "Red";
+                        }
+                    }
+
+                    foreach (var item in tmpBlueList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color2 = "Blue";
+                        }
+                    }
+
+                    foreach (var item in tmpYellowList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color3 = "Yellow";
+                        }
+                    }
+
+                    foreach (var item in tmpGreenList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color4 = "Green";
+                        }
+                    }
+
+                    #endregion
+
+                #region // adding the set to setlist
+
+
+
+                    if (tmpSet.Color1 != null &&
+                       tmpSet.Color2 != null &&
+                       tmpSet.Color3 != null &&
+                       tmpSet.Color4 != null)
+                    {
+
+                        SetList.Add(tmpSet);
+
+                    }
+                    else if (tmpSet.Color1 != null &&
+                            tmpSet.Color2 != null &&
+                            tmpSet.Color3 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color2 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color2 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+
+                    #endregion
+
+
+        }
+
+        tmpRedList.Clear();
+        tmpBlueList.Clear();
+        tmpYellowList.Clear();
+        tmpGreenList.Clear();
+
+
+
+    }
+
+    public void FindSetsWithOneOkey()
+    {
+
+        Set tmpSet;
+
+        Piece okey1;
+
+        okey1 = new Piece();
+        okey1.Color = null;
+        okey1.Number = null;
+        okey1.IsOkey = true;
+        okey1.IsFakeOkey = false;
+
+        foreach (var item in redPieces)
+        {
+            if (item.IsOkey == false)
             {
-                if (item.Number == i)
+                tmpRedList.Add(item);
+            }
+
+        }
+
+        foreach (var item in bluePieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpBlueList.Add(item);
+            }
+
+        }
+
+        foreach (var item in yellowPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpYellowList.Add(item);
+            }
+
+        }
+
+        foreach (var item in greenPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpGreenList.Add(item);
+            }
+
+        }
+
+
+        for (int i = 1; i <= 13; i++)
+        {
+
+            for (int colorOfOkey1 = 1; colorOfOkey1 <= 4; colorOfOkey1++)
+            {
+                tmpSet = new Set();
+
+                tmpSet.Number = i;
+                tmpSet.Color1 = null;
+                tmpSet.Color2 = null;
+                tmpSet.Color3 = null;
+                tmpSet.Color4 = null;
+                tmpSet.OkeyUsed = 1;
+
+                if (colorOfOkey1 == 1)
                 {
-                    tmpSet.Color1 = "Red";
-                }
-            }
+                    tmpRedList.Add(okey1);
+                    okey1.Number = i;
+                    okey1.Color = "Red";
 
-            foreach (var item in bluePieces)
-            {
-                if (item.Number == i)
+                    #region // set the color if exist
+
+                    foreach (var item in tmpRedList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color1 = "Red";
+                        }
+                    }
+
+                    foreach (var item in tmpBlueList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color2 = "Blue";
+                        }
+                    }
+
+                    foreach (var item in tmpYellowList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color3 = "Yellow";
+                        }
+                    }
+
+                    foreach (var item in tmpGreenList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color4 = "Green";
+                        }
+                    }
+
+                    #endregion
+
+                    #region // adding the set to setlist
+
+
+
+                    if (tmpSet.Color1 != null &&
+                       tmpSet.Color2 != null &&
+                       tmpSet.Color3 != null &&
+                       tmpSet.Color4 != null)
+                    {
+
+                        SetList.Add(tmpSet);
+
+                    }
+                    else if (tmpSet.Color1 != null &&
+                            tmpSet.Color2 != null &&
+                            tmpSet.Color3 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color2 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color2 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+
+                    #endregion
+
+                    tmpRedList.Remove(okey1);
+
+                }
+
+                if (colorOfOkey1 == 2)
                 {
-                    tmpSet.Color2 = "Blue";
-                }
-            }
+                    tmpBlueList.Add(okey1);
+                    okey1.Number = i;
+                    okey1.Color = "Blue";
 
-            foreach (var item in yellowPieces)
-            {
-                if (item.Number == i)
+                    #region // set the color if exist
+
+                    foreach (var item in tmpRedList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color1 = "Red";
+                        }
+                    }
+
+                    foreach (var item in tmpBlueList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color2 = "Blue";
+                        }
+                    }
+
+                    foreach (var item in tmpYellowList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color3 = "Yellow";
+                        }
+                    }
+
+                    foreach (var item in tmpGreenList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color4 = "Green";
+                        }
+                    }
+
+                    #endregion
+
+                    #region // adding the set to setlist
+
+
+
+                    if (tmpSet.Color1 != null &&
+                       tmpSet.Color2 != null &&
+                       tmpSet.Color3 != null &&
+                       tmpSet.Color4 != null)
+                    {
+
+                        SetList.Add(tmpSet);
+
+                    }
+                    else if (tmpSet.Color1 != null &&
+                            tmpSet.Color2 != null &&
+                            tmpSet.Color3 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color2 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color2 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+
+                    #endregion
+
+                    tmpBlueList.Remove(okey1);
+
+                }
+
+                if (colorOfOkey1 == 3)
                 {
-                    tmpSet.Color3 = "Yellow";
-                }
-            }
+                    tmpYellowList.Add(okey1);
+                    okey1.Number = i;
+                    okey1.Color = "Yellow";
 
-            foreach (var item in greenPieces)
-            {
-                if (item.Number == i)
+                    #region // set the color if exist
+
+                    foreach (var item in tmpRedList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color1 = "Red";
+                        }
+                    }
+
+                    foreach (var item in tmpBlueList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color2 = "Blue";
+                        }
+                    }
+
+                    foreach (var item in tmpYellowList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color3 = "Yellow";
+                        }
+                    }
+
+                    foreach (var item in tmpGreenList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color4 = "Green";
+                        }
+                    }
+
+                    #endregion
+
+                    #region // adding the set to setlist
+
+
+
+                    if (tmpSet.Color1 != null &&
+                       tmpSet.Color2 != null &&
+                       tmpSet.Color3 != null &&
+                       tmpSet.Color4 != null)
+                    {
+
+                        SetList.Add(tmpSet);
+
+                    }
+                    else if (tmpSet.Color1 != null &&
+                            tmpSet.Color2 != null &&
+                            tmpSet.Color3 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color2 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color2 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+
+                    #endregion
+
+                    tmpYellowList.Remove(okey1);
+
+                }
+
+                if (colorOfOkey1 == 4)
                 {
-                    tmpSet.Color4 = "Green";
+                    tmpGreenList.Add(okey1);
+                    okey1.Number = i;
+                    okey1.Color = "Green";
+
+                    #region // set the color if exist
+
+                    foreach (var item in tmpRedList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color1 = "Red";
+                        }
+                    }
+
+                    foreach (var item in tmpBlueList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color2 = "Blue";
+                        }
+                    }
+
+                    foreach (var item in tmpYellowList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color3 = "Yellow";
+                        }
+                    }
+
+                    foreach (var item in tmpGreenList)
+                    {
+                        if (item.Number == i)
+                        {
+                            tmpSet.Color4 = "Green";
+                        }
+                    }
+
+                    #endregion
+
+                    #region // adding the set to setlist
+
+
+
+                    if (tmpSet.Color1 != null &&
+                       tmpSet.Color2 != null &&
+                       tmpSet.Color3 != null &&
+                       tmpSet.Color4 != null)
+                    {
+
+                        SetList.Add(tmpSet);
+
+                    }
+                    else if (tmpSet.Color1 != null &&
+                            tmpSet.Color2 != null &&
+                            tmpSet.Color3 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color2 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color1 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+                    else if (tmpSet.Color2 != null &&
+                             tmpSet.Color3 != null &&
+                             tmpSet.Color4 != null)
+                    {
+                        SetList.Add(tmpSet);
+                    }
+
+                    #endregion
+
+                    tmpGreenList.Remove(okey1);
+
                 }
+
             }
 
 
-            if (tmpSet.Color1 != null &&
-               tmpSet.Color2 != null &&
-               tmpSet.Color3 != null &&
-               tmpSet.Color4 != null)
+
+        }
+
+        tmpRedList.Clear();
+        tmpBlueList.Clear();
+        tmpYellowList.Clear();
+        tmpGreenList.Clear();
+
+
+
+    }
+
+    public void FindSetsWithTwoOkey()
+    {
+
+        Set tmpSet;
+
+        Piece okey1;
+
+        okey1 = new Piece();
+        okey1.Color = null;
+        okey1.Number = null;
+        okey1.IsOkey = true;
+        okey1.IsFakeOkey = false;
+
+        Piece okey2;
+
+        okey2 = new Piece();
+        okey2.Color = null;
+        okey2.Number = null;
+        okey2.IsOkey = true;
+        okey2.IsFakeOkey = false;
+
+        foreach (var item in redPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpRedList.Add(item);
+            }
+
+        }
+
+        foreach (var item in bluePieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpBlueList.Add(item);
+            }
+
+        }
+
+        foreach (var item in yellowPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpYellowList.Add(item);
+            }
+
+        }
+
+        foreach (var item in greenPieces)
+        {
+            if (item.IsOkey == false)
+            {
+                tmpGreenList.Add(item);
+            }
+
+        }
+
+
+        for (int i = 1; i <= 13; i++)
+        {
+
+            for (int colorOfOkey2 = 1; colorOfOkey2 <= 4; colorOfOkey2++)
             {
 
-                SetList.Add(tmpSet);
+                if (colorOfOkey2 == 1)
+                {
+                    tmpRedList.Add(okey2);
+                    okey2.Number = i;
+                    okey2.Color = "Red";
+
+                    for (int colorOfOkey1 = 1; colorOfOkey1 <= 4; colorOfOkey1++)
+                    {
+                        tmpSet = new Set();
+
+                        tmpSet.Number = i;
+                        tmpSet.Color1 = null;
+                        tmpSet.Color2 = null;
+                        tmpSet.Color3 = null;
+                        tmpSet.Color4 = null;
+                        tmpSet.OkeyUsed = 2;
+
+                        if (colorOfOkey1 == 1)
+                        {
+                            tmpRedList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Red";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpRedList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 2)
+                        {
+                            tmpBlueList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Blue";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpBlueList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 3)
+                        {
+                            tmpYellowList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Yellow";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpYellowList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 4)
+                        {
+                            tmpGreenList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Green";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpGreenList.Remove(okey1);
+
+                        }
+
+                    }
+
+                    tmpRedList.Remove(okey2);
+
+                }
+
+                if (colorOfOkey2 == 2)
+                {
+                    tmpBlueList.Add(okey2);
+                    okey2.Number = i;
+                    okey2.Color = "Blue";
+
+                    for (int colorOfOkey1 = 1; colorOfOkey1 <= 4; colorOfOkey1++)
+                    {
+                        tmpSet = new Set();
+
+                        tmpSet.Number = i;
+                        tmpSet.Color1 = null;
+                        tmpSet.Color2 = null;
+                        tmpSet.Color3 = null;
+                        tmpSet.Color4 = null;
+                        tmpSet.OkeyUsed = 2;
+
+                        if (colorOfOkey1 == 1)
+                        {
+                            tmpRedList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Red";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpRedList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 2)
+                        {
+                            tmpBlueList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Blue";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpBlueList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 3)
+                        {
+                            tmpYellowList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Yellow";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpYellowList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 4)
+                        {
+                            tmpGreenList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Green";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpGreenList.Remove(okey1);
+
+                        }
+
+                    }
+
+                    tmpBlueList.Remove(okey2);
+
+                }
+
+                if (colorOfOkey2 == 3)
+                {
+                    tmpYellowList.Add(okey2);
+                    okey2.Number = i;
+                    okey2.Color = "Yellow";
+
+                    for (int colorOfOkey1 = 1; colorOfOkey1 <= 4; colorOfOkey1++)
+                    {
+                        tmpSet = new Set();
+
+                        tmpSet.Number = i;
+                        tmpSet.Color1 = null;
+                        tmpSet.Color2 = null;
+                        tmpSet.Color3 = null;
+                        tmpSet.Color4 = null;
+                        tmpSet.OkeyUsed = 2;
+
+                        if (colorOfOkey1 == 1)
+                        {
+                            tmpRedList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Red";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpRedList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 2)
+                        {
+                            tmpBlueList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Blue";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpBlueList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 3)
+                        {
+                            tmpYellowList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Yellow";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpYellowList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 4)
+                        {
+                            tmpGreenList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Green";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpGreenList.Remove(okey1);
+
+                        }
+
+                    }
+
+                    tmpYellowList.Remove(okey2);
+
+                }
+
+                if (colorOfOkey2 == 4)
+                {
+                    tmpGreenList.Add(okey2);
+                    okey2.Number = i;
+                    okey2.Color = "Green";
+
+                    for (int colorOfOkey1 = 1; colorOfOkey1 <= 4; colorOfOkey1++)
+                    {
+                        tmpSet = new Set();
+
+                        tmpSet.Number = i;
+                        tmpSet.Color1 = null;
+                        tmpSet.Color2 = null;
+                        tmpSet.Color3 = null;
+                        tmpSet.Color4 = null;
+                        tmpSet.OkeyUsed = 2;
+
+                        if (colorOfOkey1 == 1)
+                        {
+                            tmpRedList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Red";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpRedList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 2)
+                        {
+                            tmpBlueList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Blue";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpBlueList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 3)
+                        {
+                            tmpYellowList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Yellow";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpYellowList.Remove(okey1);
+
+                        }
+
+                        if (colorOfOkey1 == 4)
+                        {
+                            tmpGreenList.Add(okey1);
+                            okey1.Number = i;
+                            okey1.Color = "Green";
+
+                            #region // set the color if exist
+
+                            foreach (var item in tmpRedList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color1 = "Red";
+                                }
+                            }
+
+                            foreach (var item in tmpBlueList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color2 = "Blue";
+                                }
+                            }
+
+                            foreach (var item in tmpYellowList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color3 = "Yellow";
+                                }
+                            }
+
+                            foreach (var item in tmpGreenList)
+                            {
+                                if (item.Number == i)
+                                {
+                                    tmpSet.Color4 = "Green";
+                                }
+                            }
+
+                            #endregion
+
+                            #region // adding the set to setlist
+
+
+
+                            if (tmpSet.Color1 != null &&
+                               tmpSet.Color2 != null &&
+                               tmpSet.Color3 != null &&
+                               tmpSet.Color4 != null)
+                            {
+
+                                SetList.Add(tmpSet);
+
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                    tmpSet.Color2 != null &&
+                                    tmpSet.Color3 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color2 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color1 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+                            else if (tmpSet.Color2 != null &&
+                                     tmpSet.Color3 != null &&
+                                     tmpSet.Color4 != null)
+                            {
+                                SetList.Add(tmpSet);
+                            }
+
+                            #endregion
+
+                            tmpGreenList.Remove(okey1);
+
+                        }
+
+                    }
+
+                    tmpGreenList.Remove(okey2);
+
+                }
+
 
             }
-            else if (tmpSet.Color1 != null &&
-                    tmpSet.Color2 != null &&
-                    tmpSet.Color3 != null)
-            {
-                SetList.Add(tmpSet);
-            }
-            else if (tmpSet.Color1 != null &&
-                     tmpSet.Color2 != null &&
-                     tmpSet.Color4 != null)
-            {
-                SetList.Add(tmpSet);
-            }
-            else if (tmpSet.Color1 != null &&
-                     tmpSet.Color3 != null &&
-                     tmpSet.Color4 != null)
-            {
-                SetList.Add(tmpSet);
-            }
-            else if (tmpSet.Color2 != null &&
-                     tmpSet.Color3 != null &&
-                     tmpSet.Color4 != null)
-            {
-                SetList.Add(tmpSet);
-            }
 
+
+          
+
+
+        }
+
+        tmpRedList.Clear();
+        tmpBlueList.Clear();
+        tmpYellowList.Clear();
+        tmpGreenList.Clear();
+
+
+    }
+
+    public void FindSets()
+    {
+
+        switch (okeyCounter)
+        {
+            case 0:
+
+                FindSetsWithoutOkey();
+
+                break;
+
+            case 1:
+
+                FindSetsWithoutOkey();
+                FindSetsWithOneOkey();
+
+                break;
+
+
+            case 2:
+
+                FindSetsWithoutOkey();
+                FindSetsWithOneOkey();
+                FindSetsWithTwoOkey();
+
+                break;
+
+        }
+
+        CleanUpSets();
+
+    }
+
+    public void CleanUpSets()
+    {
+
+        for (int i = 0; i < SetList.Count; i++)
+        {
+            for (int y = 0; y < SetList.Count; y++)
+            {
+
+                if(i != y && 
+                   SetList[i].Number == SetList[y].Number &&
+                   SetList[i].Color1 == SetList[y].Color1 &&
+                   SetList[i].Color2 == SetList[y].Color2 &&
+                   SetList[i].Color3 == SetList[y].Color3 &&
+                   SetList[i].Color4 == SetList[y].Color4 &&
+                   SetList[i].OkeyUsed != SetList[y].OkeyUsed)
+                {
+
+                    if(SetList[i].OkeyUsed < SetList[y].OkeyUsed)
+                    {
+                        SetList.Remove(SetList[y]);
+                    }
+                    else
+                    {
+                        SetList.Remove(SetList[i]);
+                    }
+
+
+
+                }
+                else if(i != y &&
+                        SetList[i].Number == SetList[y].Number &&
+                        SetList[i].Color1 == SetList[y].Color1 &&
+                        SetList[i].Color2 == SetList[y].Color2 &&
+                        SetList[i].Color3 == SetList[y].Color3 &&
+                        SetList[i].Color4 == SetList[y].Color4 &&
+                        SetList[i].OkeyUsed == SetList[y].OkeyUsed)
+                {
+
+                    SetList.Remove(SetList[y]);
+                }
+
+
+            }
 
         }
 
@@ -1097,31 +3207,33 @@ public class MainClass
             if(item.Color1 != null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write($"{item.Number} ");
+                Console.Write($" {item.Number} ");
             }
 
             if (item.Color2 != null)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write($"{item.Number} ");
+                Console.Write($" {item.Number} ");
             }
 
             if (item.Color3 != null)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"{item.Number} ");
+                Console.Write($" {item.Number} ");
             }
 
             if (item.Color4 != null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{item.Number}");
+                Console.Write($" {item.Number} ");
             }
 
 
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("]");
+
+            Console.Write($"\t\tOkey Used:{item.OkeyUsed}");
 
         }
 
@@ -1159,6 +3271,8 @@ public class MainClass
         a.SeperateColorsOfPlayersPieces();
 
         a.ShowPlayersPiecesInRows();
+
+        a.FindOkeyCount();
 
         a.FindRuns();
 
