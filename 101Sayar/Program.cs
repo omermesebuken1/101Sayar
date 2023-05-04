@@ -24,6 +24,21 @@ public class Set
     public int OkeyUsed { get; set; }
 }
 
+public class Run
+{
+    public int? FirstNumber { get; set; }
+    public int? LastNumber { get; set; }
+    public string ColorOfRun { get; set; }
+    public int? itemCount { get; set; }
+    public int? SumOfRun { get; set; }
+    public int? OkeyCount { get; set; }
+    public List<Piece> OkeyUsedAs { get; set; }
+    public List<Piece> PiecesList { get; set; }
+    
+}
+
+
+
 
 
 public class MainClass
@@ -43,6 +58,7 @@ public class MainClass
     public List<Piece> tmpGreenList = new List<Piece>();
 
     List<Set> SetList = new List<Set>();
+    List<Run> RunList = new List<Run>();
 
     List<(int?, int?, int?)> rangePacks = new List<(int?, int?, int?)>();
 
@@ -920,10 +936,15 @@ public class MainClass
 
         int? endNumber = 0;
 
+        int? startNumberIndex = 0;
+
+        int? endNumberIndex = 0;
 
         startNumber = denemeList[0].Number;
-
+        
         endNumber = 0;
+
+        
 
 
         for (int i = 0; i <= denemeList.Count; i++)
@@ -934,19 +955,38 @@ public class MainClass
                 if (denemeList[i + 1].Number - denemeList[i].Number == 1)
                 {
                     endNumber = denemeList[i + 1].Number;
+                    endNumberIndex = i + 1;
                 }
                 else if (denemeList[i + 1].Number - denemeList[i].Number == 0)
                 {
                     endNumber = denemeList[i + 1].Number;
+                    endNumberIndex = i + 1;
                 }
                 else
                 {
                     if (endNumber - startNumber >= 2) // check if the range has 3 or more elements
                     {
+
+
+                        Run tmpRun;
+                        tmpRun = new Run();
+                        tmpRun.ColorOfRun = denemeList[i].Color;
+                        tmpRun.FirstNumber = startNumber;
+                        tmpRun.LastNumber = endNumber;
+                        tmpRun.OkeyCount = okeyCounter;
+                        tmpRun.itemCount = (endNumber - startNumber + 1);
+                        tmpRun.SumOfRun = (tmpRun.itemCount / 2) * (startNumber + endNumber);
+
+
+
+                        RunList.Add(tmpRun);
+
+
                         rangePacks.Add((startNumber, endNumber, 0));
                     }
 
                     startNumber = denemeList[i + 1].Number;
+                    startNumberIndex = i + 1;
                 }
 
             }
@@ -957,6 +997,8 @@ public class MainClass
                 {
 
                     endNumber = denemeList[i].Number;
+                    endNumberIndex = i;
+
                     if (endNumber - startNumber >= 2) // check if the range has 3 or more elements
                     {
                         rangePacks.Add((startNumber, endNumber, 0));
@@ -966,6 +1008,7 @@ public class MainClass
                 else if (denemeList[i].Number - denemeList[i - 1].Number == 0)
                 {
                     endNumber = denemeList[i].Number;
+                    endNumberIndex = i;
 
                     if (endNumber - startNumber >= 2) // check if the range has 3 or more elements
                     {
@@ -3244,6 +3287,43 @@ public class MainClass
 
     }
 
+    public void TransferRuns()
+    {
+        Run tmpRun;
+        Piece tmpPiece;
+
+        foreach (var range in redRangePacks)
+        {
+
+            tmpRun = new Run();
+            tmpRun.ColorOfRun = "Red";
+            tmpRun.FirstNumber = range.Item1;
+            tmpRun.LastNumber = range.Item2;
+            tmpRun.OkeyCount = range.Item3;
+            tmpRun.itemCount = (range.Item2 - range.Item1 + 1);
+
+            tmpRun.SumOfRun = (tmpRun.itemCount / 2) * (range.Item1 + range.Item2);
+
+            for (int? i = tmpRun.FirstNumber; i < tmpRun.itemCount; i++)
+            {
+                tmpPiece = new Piece();
+                tmpPiece.Color = tmpRun.ColorOfRun;
+                tmpPiece.Number = i;
+                tmpPiece.IsFakeOkey = false;
+                tmpPiece.IsOkey = false;
+
+                //tmpRun.PiecesList.Add();
+            }
+            
+
+            RunList.Add(tmpRun);
+
+
+        }
+
+
+    }
+
     static void Main()
     {
 
@@ -3278,7 +3358,7 @@ public class MainClass
 
         a.FindSets();
 
-        a.WriteSets();
+        //a.WriteSets();
 
 
 
