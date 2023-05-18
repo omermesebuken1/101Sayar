@@ -1215,6 +1215,48 @@ public class MainClass
             tmpSet.OkeyUsedAs.Add(tmpPiece);
         }
 
+        //adding pieces
+
+        if (C1)
+        {
+            tmpPiece = new Piece();
+            tmpPiece.Number = i;
+            tmpPiece.Color = "Red";
+            tmpPiece.IsFakeOkey = false;
+            tmpPiece.IsOkey = false;
+            tmpSet.PiecesList.Add(tmpPiece);
+        }
+
+        if (C2) 
+        {
+            tmpPiece = new Piece();
+            tmpPiece.Number = i;
+            tmpPiece.Color = "Blue";
+            tmpPiece.IsFakeOkey = false;
+            tmpPiece.IsOkey = false;
+            tmpSet.PiecesList.Add(tmpPiece);
+        }
+
+        if (C3) 
+        {
+            tmpPiece = new Piece();
+            tmpPiece.Number = i;
+            tmpPiece.Color = "Yellow";
+            tmpPiece.IsFakeOkey = false;
+            tmpPiece.IsOkey = false;
+            tmpSet.PiecesList.Add(tmpPiece);
+        }
+
+        if (C4) 
+        {
+            tmpPiece = new Piece();
+            tmpPiece.Number = i;
+            tmpPiece.Color = "Green";
+            tmpPiece.IsFakeOkey = false;
+            tmpPiece.IsOkey = false;
+            tmpSet.PiecesList.Add(tmpPiece);
+        }
+
 
         if (tmpSet.itemCount >= 3) SetList.Add(tmpSet);
 
@@ -2786,17 +2828,22 @@ public class MainClass
             if (lastAdded == "Run")
             {
                 RemoveItemsFromPlayerPieces(RunList[0], null);
+                ArrangePlayerPieces();
+                SeperateColorsOfPlayersPieces();
+                FindOkeyCount();
+                FindRuns();
+                FindSets();
             }
             else if (lastAdded == "Set")
             {
                 RemoveItemsFromPlayerPieces(null, SetList[0]);
+                ArrangePlayerPieces();
+                SeperateColorsOfPlayersPieces();
+                FindOkeyCount();
+                FindRuns();
+                FindSets();
             }
 
-            ArrangePlayerPieces();
-            SeperateColorsOfPlayersPieces();
-            FindOkeyCount();
-            FindRuns();
-            FindSets();
         }
         while (RunList.Count != 0 || SetList.Count != 0);
 
@@ -2851,8 +2898,7 @@ public class MainClass
 
             if (tmpSet.OkeyCount == 1)
             {
-                playersPieces.Remove(playersPieces.Find(x => x.IsOkey = true));
-                FindOkeyCount();
+                playersPieces.Remove(playersPieces.Find(x => x.IsOkey));
             }
             else if (tmpSet.OkeyCount == 2)
             {
@@ -2862,7 +2908,6 @@ public class MainClass
                     {
                         playersPieces.Remove(item);
                     }
-                    FindOkeyCount();
                 }
 
             }
